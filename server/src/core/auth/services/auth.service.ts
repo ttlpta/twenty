@@ -135,13 +135,16 @@ export class AuthService {
   }
 
   async checkUserExists(email: string): Promise<UserExists> {
-    const user = await this.userService.findUnique({
+    const userCount = await this.userService.count({
       where: {
-        email,
+        email: {
+          equals: email,
+          mode: 'insensitive',
+        },
       },
     });
 
-    return { exists: !!user };
+    return { exists: !!userCount };
   }
 
   async checkWorkspaceInviteHashIsValid(
