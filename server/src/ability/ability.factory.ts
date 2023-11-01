@@ -20,6 +20,7 @@ import {
   WebHook,
   Workspace,
   WorkspaceMember,
+  Notification,
 } from '@prisma/client';
 
 import { AbilityAction } from './ability.action';
@@ -43,6 +44,7 @@ type SubjectsAbility = Subjects<{
 
   Workspace: Workspace;
   WorkspaceMember: WorkspaceMember;
+  Notification: Notification;
 }>;
 
 export type AppAbility = PureAbility<
