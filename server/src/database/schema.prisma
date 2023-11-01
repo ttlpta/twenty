@@ -837,10 +837,10 @@ model WebHook {
 
 model Notification {
   id                String             @id @default(uuid())
-  sentToId          String
-  sentTo            User               @relation(fields: [sentToId], references: [id])
-  sentToWorkspaceId String
-  workspace         Workspace          @relation(fields: [sentToWorkspaceId], references: [id])
+  sentToId          String?
+  sentTo            User?              @relation(fields: [sentToId], references: [id])
+  sentToWorkspaceId String?
+  workspace         Workspace?         @relation(fields: [sentToWorkspaceId], references: [id])
   content           String
   status            NotificationStatus
   createdAt         DateTime           @default(now())

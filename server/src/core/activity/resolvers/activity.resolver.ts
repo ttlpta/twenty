@@ -2,7 +2,7 @@ import { Resolver, Args, Mutation, Query } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 
 import { accessibleBy } from '@casl/prisma';
-import { Prisma } from '@prisma/client';
+import { NotificationStatus, Prisma } from '@prisma/client';
 
 import { JwtAuthGuard } from 'src/guards/jwt.auth.guard';
 import { AuthWorkspace } from 'src/decorators/auth-workspace.decorator';
@@ -28,11 +28,15 @@ import { Workspace } from 'src/core/@generated/workspace/workspace.model';
 import { UpdateOneActivityArgs } from 'src/core/@generated/activity/update-one-activity.args';
 import { FindManyActivityArgs } from 'src/core/@generated/activity/find-many-activity.args';
 import { DeleteManyActivityArgs } from 'src/core/@generated/activity/delete-many-activity.args';
+import { NotificationService } from 'src/core/notification/notification.service';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Activity)
 export class ActivityResolver {
-  constructor(private readonly activityService: ActivityService) {}
+  constructor(
+    private readonly activityService: ActivityService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   @Mutation(() => Activity, {
     nullable: false,
@@ -62,6 +66,14 @@ export class ActivityResolver {
       select: prismaSelect.value,
     } as Prisma.ActivityCreateArgs);
 
+    await this.notificationService.create({
+      data: {
+        sentToWorkspaceId: createdActivity?.workspaceId ?? undefined,
+        sentToId: createdActivity?.assigneeId ?? undefined,
+        content: 'test',
+        status: NotificationStatus.UnSent,
+      },
+    });
     return createdActivity;
   }
 

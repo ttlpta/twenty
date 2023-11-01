@@ -19,4 +19,5 @@ export type ModelSelectMap = {
   Favorite: Prisma.FavoriteSelect;
   ApiKey: Prisma.ApiKeySelect;
   WebHook: Prisma.WebHookSelect;
+  Notification: Prisma.NotificationSelect;
 };
